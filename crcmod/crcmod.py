@@ -53,6 +53,11 @@ except ImportError:
       import crcmod._crcfunpy as _crcfun
     _usingExtension = False
 
+try:
+    MAXINT = sys.maxint
+except AttributeError:  # pragma: no cover
+    MAXINT = sys.maxsize
+
 if sys.version_info.major > 2:
   long = int
 
@@ -319,7 +324,7 @@ def _bitrev(x, n):
     for i in xrange(n):
         y = (y << 1) | (x & long(1))
         x = x >> 1
-    if ((long(1)<<n)-1) <= sys.maxint:
+    if ((long(1)<<n)-1) <= MAXINT:
         return int(y)
     return y
 
@@ -339,7 +344,7 @@ def _bytecrc(crc, poly, n):
             crc = crc << 1
     mask = (long(1)<<n) - 1
     crc = crc & mask
-    if mask <= sys.maxint:
+    if mask <= MAXINT:
         return int(crc)
     return crc
 
@@ -353,7 +358,7 @@ def _bytecrc_r(crc, poly, n):
             crc = crc >> 1
     mask = (long(1)<<n) - 1
     crc = crc & mask
-    if mask <= sys.maxint:
+    if mask <= MAXINT:
         return int(crc)
     return crc
 
@@ -417,12 +422,12 @@ def _verifyParams(poly, initCrc, xorOut):
 
     # Adjust the initial CRC to the correct data type (unsigned value).
     initCrc = long(initCrc) & mask
-    if mask <= sys.maxint:
+    if mask <= MAXINT:
         initCrc = int(initCrc)
 
     # Similar for XOR-out value.
     xorOut = long(xorOut) & mask
-    if mask <= sys.maxint:
+    if mask <= MAXINT:
         xorOut = int(xorOut)
 
     return (sizeBits, initCrc, xorOut)
