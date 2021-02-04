@@ -44,7 +44,10 @@ __all__ = '''mkCrcFun Crc
 # If the extension module was not built, drop back to the Python implementation
 # even though it is significantly slower.
 try:
-    import _crcfunext as _crcfun
+    if sys.version_info.major == 2:
+      import _crcfunext as _crcfun
+    else:  # PY3
+      import crcmod.python3._crcfunext as _crcfun
     _usingExtension = True
 except ImportError:
     if sys.version_info.major == 2:
